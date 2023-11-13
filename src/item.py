@@ -1,4 +1,5 @@
 import csv
+import json
 
 
 class Item:
@@ -47,12 +48,7 @@ class Item:
         self.price *= self.pay_rate
 
     @classmethod
-    def instantiate_from_csv(cls, filename: str) -> None:
-        """
-        Инициализирует экземпляры класса Item данными из CSV-файла.
-
-        :param filename: Имя CSV-файла.
-        """
+    def instantiate_from_csv(cls, filename):
         with open(filename, 'r', encoding='cp1251') as file:
             reader = csv.DictReader(file)
             for row in reader:
@@ -70,6 +66,19 @@ class Item:
         :return: Преобразованное число.
         """
         try:
-            return float(value)
+            if value is not None and value.strip():  # проверка на пустую строку
+                return float(value)
+            else:
+                return 0.0
         except ValueError:
             return 0.0
+
+    def to_json(self, filename):
+        item_data = {
+            'name': self.name,
+            'price': self.price,
+            'quantity': self.quantity
+        }
+
+        with open(filename, 'w', encoding='utf-8') as file:
+            json.dump(item_data, file, indent=2, ensure_ascii=False)
