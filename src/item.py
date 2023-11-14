@@ -92,6 +92,3 @@ class Item:
             'price': self.price,
             'quantity': self.quantity
         }
-
-        with open(filename, 'w', encoding='utf-8') as file:
-            json.dump(item_data, file, indent=2, ensure_ascii=False)
