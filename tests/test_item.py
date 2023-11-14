@@ -5,6 +5,12 @@ from src.item import Item
 def sample_item():
     return Item(name='SampleItem', price=10.0, quantity=5)
 
+def test_repr(sample_item):
+    assert repr(sample_item) == "Item(name=SampleItem, price=10.0, quantity=5)"
+
+def test_str(sample_item):
+    assert str(sample_item) == "Item: SampleItem, Price: 10.0, Quantity: 5"
+
 def test_name_property(sample_item):
     assert sample_item.name == 'SampleItem'
 

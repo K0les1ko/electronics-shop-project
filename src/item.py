@@ -1,13 +1,24 @@
 import csv
 import json
 
-
 class Item:
     """
     Класс для представления товара в магазине.
     """
     pay_rate = 1.0
     all = []
+
+    def __repr__(self):
+        """
+        Магический метод для представления объекта в виде строки, которая может быть использована для его воссоздания.
+        """
+        return f"Item(name={self.name}, price={self.price}, quantity={self.quantity})"
+
+    def __str__(self):
+        """
+        Магический метод для представления объекта в виде читаемой строки.
+        """
+        return f"Item: {self.name}, Price: {self.price}, Quantity: {self.quantity}"
 
     def __init__(self, name: str, price: float, quantity: int) -> None:
         """
@@ -49,8 +60,10 @@ class Item:
 
     @classmethod
     def instantiate_from_csv(cls, filename):
-        with open(filename, 'r', encoding='cp1251') as file:
+        cls.all = []  # Очистка списка all
+        with open(filename, 'r', encoding='utf-8') as file:
             reader = csv.DictReader(file)
+            print(reader)
             for row in reader:
                 name = row['name']
                 price = cls.string_to_number(row['price'])
@@ -66,8 +79,8 @@ class Item:
         :return: Преобразованное число.
         """
         try:
-            if value is not None and value.strip():  # проверка на пустую строку
-                return float(value)
+            if value is not None and value.strip():
+                return int(float(value))  # Преобразование строки в int после float
             else:
                 return 0.0
         except ValueError:

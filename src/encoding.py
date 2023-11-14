@@ -1,14 +1,10 @@
-import chardet
+import os
 
-text = """
-��������,100,1
-�������,1000,3
-������,10,5
-�����,50,5
-����������,75,5
-"""
+def instantiate_from_csv():
+    file_path = os.path.join(os.path.dirname(__file__), 'items.csv')
 
-result = chardet.detect(text.encode())
-detected_encoding = result['encoding']
+    with open(file_path, 'r', encoding='utf-8') as file:
+        file_content = file.read()
+        print(file_content)
 
-print(f"The detected encoding is: {detected_encoding}")
+instantiate_from_csv()
