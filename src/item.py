@@ -61,13 +61,13 @@ class Item:
     @classmethod
     def instantiate_from_csv(cls, filename):
         cls.all = []  # Очистка списка all
-        with open(filename, 'r', encoding='utf-8') as file:
+        with open(filename, 'r', encoding='windows-1251') as file:
             reader = csv.DictReader(file)
             print(reader)
             for row in reader:
                 name = row['name']
                 price = cls.string_to_number(row['price'])
-                quantity = int(row['quantity'])
+                quantity = str(row['quantity'])
                 cls(name, price, quantity)
 
     @staticmethod
