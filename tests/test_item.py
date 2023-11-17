@@ -40,18 +40,4 @@ def test_instantiate_from_csv(tmp_path):
     assert Item.all[1].price == 20.0
     assert int(Item.all[2].quantity) == 2
 
-@staticmethod
-def string_to_number(value: str) -> float:
-    """
-    Преобразует строку в число.
 
-    :param value: Строка, представляющая число.
-    :return: Преобразованное число.
-    """
-    try:
-        if value is not None and value.strip():
-            return float(value)
-        else:
-            return 0.0
-    except ValueError:
-        return 0.0
