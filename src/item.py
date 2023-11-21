@@ -8,6 +8,12 @@ class Item:
     pay_rate = 1.0
     all = []
 
+    def __add__(self, other):
+        if isinstance(other, Item):
+            return self.quantity + other.quantity
+        else:
+            raise TypeError("Unsupported operand type. You can only add Item instances.")
+
     def __repr__(self):
         """
         Магический метод для представления объекта в виде строки, которая может быть использована для его воссоздания.
@@ -50,7 +56,7 @@ class Item:
 
         :return: Общая стоимость товара.
         """
-        return self.price * self.quantity
+        return float(self.price) * float(self.quantity)
 
     def apply_discount(self) -> None:
         """

@@ -34,10 +34,15 @@ def test_instantiate_from_csv(tmp_path):
 
     Item.instantiate_from_csv(csv_path)
 
-
     assert len(Item.all) == 4
-    assert Item.all[0].name == '    Item1' #какая то чушь с пробелами
+    assert Item.all[0].name.strip() == 'Item1'
     assert Item.all[1].price == 20.0
     assert int(Item.all[2].quantity) == 2
 
+    # Тесты name_setter_max_length
+    assert Item.all[0].name.strip() == 'Item1'
+    assert Item.all[3].price == 0.0  # цена для Item.all[3] осталась 0.0
+
+    # calculate_total_price правильно рассчитывает общую стоимость товара
+    assert Item.all[0].calculate_total_price() == float(Item.all[0].quantity) * 10.0
 
