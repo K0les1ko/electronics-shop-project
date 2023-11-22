@@ -9,11 +9,15 @@ class Item:
     all = []
 
     def __add__(self, other):
-        if isinstance(other, Item):
-            return self.quantity + other.quantity
-        else:
-            raise TypeError("Unsupported operand type. You can only add Item instances.")
+        if not isinstance(other, Item):
+            raise TypeError(f"Unsupported operand type: {type(other)}")
 
+        # Создаем новый объект Item с суммой соответствующих атрибутов
+        new_name = f"{self.name} + {other.name}"
+        new_price = self.price + other.price
+        new_quantity = self.quantity + other.quantity
+
+        return Item(name=new_name, price=new_price, quantity=new_quantity)
     def __repr__(self):
         """
         Магический метод для представления объекта в виде строки, которая может быть использована для его воссоздания.

@@ -46,3 +46,14 @@ def test_instantiate_from_csv(tmp_path):
     # calculate_total_price правильно рассчитывает общую стоимость товара
     assert Item.all[0].calculate_total_price() == float(Item.all[0].quantity) * 10.0
 
+def test_add_items(sample_item):
+    # Создаем второй товар для сложения
+    other_item = Item(name='OtherItem', price=5.0, quantity=3)
+
+    # Складываем товары
+    result_item = sample_item + other_item
+
+    # Проверяем, что результат сложения имеет правильные значения атрибутов
+    assert result_item.name == 'SampleItem + OtherItem'
+    assert result_item.price == 15.0
+    assert result_item.quantity == 8

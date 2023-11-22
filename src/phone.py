@@ -21,10 +21,3 @@ class Phone(Item):
     def __str__(self):
         return f"{self.name}"
 
-    def __add__(self, other):
-        if isinstance(other, Item):
-            return self.quantity + other.quantity
-        elif isinstance(other, Phone):
-            return self.quantity + other.quantity
-        else:
-            raise TypeError("Unsupported operand type. You can only add Phone or Item instances.")
