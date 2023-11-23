@@ -1,6 +1,7 @@
 from src.item import Item
+from src.keyboard import LanguageMixin
 
-class Phone(Item):
+class Phone(Item, LanguageMixin):
     def __init__(self, name: str, price: float, quantity: int, supported_sim_cards: int) -> None:
         super().__init__(name, price, quantity)
         self._supported_sim_cards = supported_sim_cards
