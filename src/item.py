@@ -1,6 +1,9 @@
 import csv
 import json
 
+class InstantiateCSVError(Exception):
+    pass
+
 class Item:
     """
     Класс для представления товара в магазине.
@@ -69,16 +72,23 @@ class Item:
         self.price *= self.pay_rate
 
     @classmethod
-    def instantiate_from_csv(cls, filename):
+    def instantiate_from_csv(cls, filename="items.csv"):
         cls.all = []  # Очистка списка all
-        with open(filename, 'r', encoding='windows-1251') as file:
-            reader = csv.DictReader(file)
-            print(reader)
-            for row in reader:
-                name = row['name']
-                price = cls.string_to_number(row['price'])
-                quantity = str(row['quantity'])
-                cls(name, price, quantity)
+        try:
+            with open(filename, 'r', encoding='windows-1251') as file:
+                reader = csv.DictReader(file)
+                if 'name' not in reader.fieldnames or 'price' not in reader.fieldnames:
+                    raise InstantiateCSVError("Файл item.csv поврежден. Отсутствует одна из колонок данных.")
+                for row in reader:
+                    name = row['name']
+                    price = cls.string_to_number(row['price'])
+                    quantity = cls.string_to_number(
+                        row.get('quantity', '0'))  # Обрабатываем отсутствие колонки quantity
+                    cls(name, price, quantity)
+        except FileNotFoundError:
+            raise FileNotFoundError(f"Отсутствует файл {filename}")
+        except InstantiateCSVError as e:
+            raise e
 
     @staticmethod
     def string_to_number(value: str) -> float:

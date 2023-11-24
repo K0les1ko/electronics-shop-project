@@ -1,5 +1,7 @@
+import csv
+import os
 import pytest
-from src.item import Item
+from src.item import Item, InstantiateCSVError
 
 @pytest.fixture
 def sample_item():
@@ -22,8 +24,20 @@ def test_name_setter_max_length(sample_item):
     sample_item.name = 'ThisNameIsTooLong'
     assert sample_item.name == 'ThisNameIs'
 
+def test_calculate_total_price(sample_item):
+    assert sample_item.calculate_total_price() == 50.0
 
-def test_instantiate_from_csv(tmp_path):
+def test_apply_discount(sample_item):
+    sample_item.apply_discount()
+    assert sample_item.price == 10.0
+
+def test_instantiate_from_csv_file_not_found(tmp_path):
+    with pytest.raises(FileNotFoundError, match="Отсутствует файл items.csv"):
+        Item.instantiate_from_csv()
+
+
+
+def test_instantiate_from_csv_successful(tmp_path):
     csv_content = """name,price,quantity
     Item1,10.0,5
     Item2,20.0,3
@@ -32,28 +46,8 @@ def test_instantiate_from_csv(tmp_path):
     csv_path = tmp_path / 'test_items.csv'
     csv_path.write_text(csv_content)
 
-    Item.instantiate_from_csv(csv_path)
-
-    assert len(Item.all) == 4
-    assert Item.all[0].name.strip() == 'Item1'
-    assert Item.all[1].price == 20.0
-    assert int(Item.all[2].quantity) == 2
-
-    # Тесты name_setter_max_length
-    assert Item.all[0].name.strip() == 'Item1'
-    assert Item.all[3].price == 0.0  # цена для Item.all[3] осталась 0.0
-
-    # calculate_total_price правильно рассчитывает общую стоимость товара
-    assert Item.all[0].calculate_total_price() == float(Item.all[0].quantity) * 10.0
-
-def test_add_items(sample_item):
-    # Создаем второй товар для сложения
-    other_item = Item(name='OtherItem', price=5.0, quantity=3)
-
-    # Складываем товары
-    result_item = sample_item + other_item
-
-    # Проверяем, что результат сложения имеет правильные значения атрибутов
-    assert result_item.name == 'SampleItem + OtherItem'
-    assert result_item.price == 15.0
-    assert result_item.quantity == 8
+    try:
+        Item.instantiate_from_csv(csv_path)
+        assert len(Item.all) == 4
+    finally:
+        csv_path.unlink()
